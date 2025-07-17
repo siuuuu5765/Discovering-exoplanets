@@ -125,29 +125,4 @@ assistant_message = response.choices[0].message.content
 for msg in st.session_state.chat_history:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
-        st.header("💬 Ask AI About Exoplanets")
-
-# Initialize chat history
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = [{"role": "system", "content": "You are an expert in exoplanets. Answer like a scientist but in simple terms."}]
-
-# Input from user
-user_input = st.text_input("Ask me something about an exoplanet:")
-
-# If user types and clicks "Ask"
-if st.button("Ask") and user_input:
-    st.session_state.chat_history.append({"role": "user", "content": user_input})
-    
-    # Get OpenAI response
-    try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=st.session_state.chat_history
-        )
-        reply = response.choices[0].message.content
-    except Exception as e:
-        reply = f"Error: {e}"
-    
-    st.session_state.chat_history.append({"role": "assistant", "content": reply})
-    st.write("🧠 AI:", reply)
-
+        
