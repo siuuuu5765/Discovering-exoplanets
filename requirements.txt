@@ -1,0 +1,6 @@
+streamlit
+lightkurve
+scikit-learn
+openai
+numpy
+pandas
