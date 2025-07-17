@@ -55,3 +55,36 @@ if tic_id and st.button("Analyze"):
             st.info("Enter your OpenAI key to get explanation.")
     except Exception as e:
         st.error(f"Error: {e}")
+import openai
+
+# --- OPENAI CHATBOT ---
+
+st.markdown("---")
+st.subheader("🧠 Ask the AI about exoplanets")
+
+# Load API key from Streamlit secrets
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
+# Chat history
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+# Chat input
+user_input = st.chat_input("Ask me about exoplanets...")
+
+if user_input:
+    with st.spinner("Thinking..."):
+        st.session_state.chat_history.append({"role": "user", "content": user_input})
+
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=st.session_state.chat_history
+        )
+
+        reply = response["choices"][0]["message"]["content"]
+        st.session_state.chat_history.append({"role": "assistant", "content": reply})
+
+# Display chat
+for msg in st.session_state.chat_history:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
