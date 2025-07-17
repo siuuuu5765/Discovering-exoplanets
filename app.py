@@ -93,7 +93,14 @@ assistant_message = response.choices[0].message.content
 assistant_message = response.choices[0].message.content
 
 
-        reply = response["choices"][0]["message"]["content"]
+       def get_chat_response():
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=st.session_state.chat_history
+    )
+    reply = response.choices[0].message.content
+    return reply
+
         st.session_state.chat_history.append({"role": "assistant", "content": reply})
 
 # Display chat
