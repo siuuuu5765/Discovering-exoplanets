@@ -118,7 +118,7 @@ def get_chat_response():
     reply = response.choices[0].message.content
     return reply
 
-        st.session_state.chat_history.append({"role": "assistant", "content": reply})
+st.session_state.chat_history.append({"role": "assistant", "content": reply})
 
 # Display chat
 for msg in st.session_state.chat_history:
