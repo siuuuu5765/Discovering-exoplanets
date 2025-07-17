@@ -110,8 +110,7 @@ assistant_message = response.choices[0].message.content
 
 assistant_message = response.choices[0].message.content
 
-
-       def get_chat_response():
+def get_chat_response():
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=st.session_state.chat_history
