@@ -78,10 +78,17 @@ if user_input:
 
         client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
+import openai
+
+client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
 response = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=st.session_state.chat_history
 )
+
+assistant_message = response.choices[0].message.content
+
 
 assistant_message = response.choices[0].message.content
 
