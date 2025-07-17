@@ -1,6 +1,6 @@
 import streamlit as st
 from lightkurve import search_lightcurve
-from sklearn.externals import joblib
+import joblib
 import pandas as pd
 import numpy as np
 import openai
