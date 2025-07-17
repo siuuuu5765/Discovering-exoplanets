@@ -109,7 +109,6 @@ assistant_message = response.choices[0].message.content
 
 
 assistant_message = response.choices[0].message.content
-
 def get_chat_response():
 import openai
 from openai.error import RateLimitError
