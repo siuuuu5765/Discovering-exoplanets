@@ -111,11 +111,27 @@ assistant_message = response.choices[0].message.content
 assistant_message = response.choices[0].message.content
 
 def get_chat_response():
+import openai
+from openai.error import RateLimitError
+
+try:
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=st.session_state.chat_history
     )
     reply = response.choices[0].message.content
+
+except RateLimitError:
+    reply = "⚠️ Rate limit exceeded. Please wait a moment and try again."
+except Exception as e:
+    reply = f"⚠️ An unexpected error occurred: {e}"
+
+# Add assistant reply to chat history
+st.session_state.chat_history.append({"role": "assistant", "content": reply})
+
+# Display it
+st.write("🧠 AI:", reply)
+
     return reply
 
 st.session_state.chat_history.append({"role": "assistant", "content": reply})
