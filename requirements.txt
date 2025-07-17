@@ -1,6 +1,6 @@
 streamlit
 lightkurve
 scikit-learn
-openai
+openai>=1.3.5
 numpy
 pandas
