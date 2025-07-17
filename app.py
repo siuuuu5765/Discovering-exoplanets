@@ -5,9 +5,27 @@ import pandas as pd
 import numpy as np
 import openai
 import os
+import openai
+import streamlit as st
+
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+client = openai.OpenAI()
+
+def get_chat_response():
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=st.session_state.chat_history
+        )
+        reply = response.choices[0].message.content
+        return reply
+    except Exception as e:
+        return f"Error: {e}"
+
+
 
 st.set_page_config(page_title="Exoplanet AI Explorer", layout="wide")
-st.title("🔭 Exoplanet Discovery with AI")
+st.title("Exoplanet Discovery with AI")
 
 # Load ML model
 model = joblib.load("planet_classifier.pkl")
@@ -33,12 +51,12 @@ if tic_id and st.button("Analyze"):
         folded = search_result.fold(period=2.0)
         folded.scatter(label="Folded Light Curve")
 
-        st.write("📈 Light curve plotted.")
+        st.write("Light curve plotted.")
 
         # Feature extraction
         features = extract_features_from_lc(search_result)
         pred = model.predict([features])[0]
-        label = "✅ Likely Exoplanet" if pred == 1 else "❌ Likely Not a Planet"
+        label = " Likely Exoplanet" if pred == 1 else "❌ Likely Not a Planet"
         st.subheader(f"🧠 AI Prediction: {label}")
 
         if openai_api_key:
@@ -49,7 +67,7 @@ if tic_id and st.button("Analyze"):
                 messages=[{"role": "user", "content": prompt}]
             )
             explanation = response['choices'][0]['message']['content']
-            st.write("🤖 AI Explanation:")
+            st.write(" AI Explanation:")
             st.success(explanation)
         else:
             st.info("Enter your OpenAI key to get explanation.")
@@ -60,7 +78,7 @@ import openai
 # --- OPENAI CHATBOT ---
 
 st.markdown("---")
-st.subheader("🧠 Ask the AI about exoplanets")
+st.subheader(" Ask the AI about exoplanets")
 
 # Load API key from Streamlit secrets
 openai.api_key = st.secrets["OPENAI_API_KEY"]
@@ -107,3 +125,29 @@ assistant_message = response.choices[0].message.content
 for msg in st.session_state.chat_history:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
+        st.header("💬 Ask AI About Exoplanets")
+
+# Initialize chat history
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = [{"role": "system", "content": "You are an expert in exoplanets. Answer like a scientist but in simple terms."}]
+
+# Input from user
+user_input = st.text_input("Ask me something about an exoplanet:")
+
+# If user types and clicks "Ask"
+if st.button("Ask") and user_input:
+    st.session_state.chat_history.append({"role": "user", "content": user_input})
+    
+    # Get OpenAI response
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=st.session_state.chat_history
+        )
+        reply = response.choices[0].message.content
+    except Exception as e:
+        reply = f"Error: {e}"
+    
+    st.session_state.chat_history.append({"role": "assistant", "content": reply})
+    st.write("🧠 AI:", reply)
+
