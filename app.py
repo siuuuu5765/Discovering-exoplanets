@@ -7,7 +7,7 @@ import openai
 
 # --- SETUP ---
 st.set_page_config(page_title="Exoplanet AI Explorer", layout="wide")
-st.title("🪐 Exoplanet Discovery with AI")
+st.title(" Exoplanet Discovery with AI")
 
 # --- Load ML Model ---
 model = joblib.load("planet_classifier.pkl")
@@ -28,18 +28,18 @@ def extract_features_from_lc(lc):
 
 # --- Analyze Button ---
 if tic_id and st.button("Analyze"):
-    st.write("🔍 Fetching data...")
+    st.write(" Fetching data...")
     try:
         search_result = search_lightcurve(f"TIC {tic_id}", mission="TESS").download()
         search_result = search_result.remove_nans().normalize()
         folded = search_result.fold(period=2.0)
         folded.scatter(label="Folded Light Curve")
-        st.write("✅ Light curve plotted.")
+        st.write(" Light curve plotted.")
 
         features = extract_features_from_lc(search_result)
         pred = model.predict([features])[0]
-        label = "🌍 Likely Exoplanet" if pred == 1 else "❌ Likely Not a Planet"
-        st.subheader(f"🧠 AI Prediction: {label}")
+        label = " Likely Exoplanet" if pred == 1 else " Likely Not a Planet"
+        st.subheader(f" AI Prediction: {label}")
 
         if openai_api_key:
             openai.api_key = openai_api_key
@@ -50,19 +50,19 @@ if tic_id and st.button("Analyze"):
                     messages=[{"role": "user", "content": prompt}]
                 )
                 explanation = response['choices'][0]['message']['content']
-                st.write("📘 Explanation:")
+                st.write(" Explanation:")
                 st.success(explanation)
             except Exception as e:
-                st.error(f"⚠️ OpenAI error: {e}")
+                st.error(f" OpenAI error: {e}")
         else:
             st.info("Enter your OpenAI API key to receive an explanation.")
 
     except Exception as e:
-        st.error(f"❌ Error: {e}")
+        st.error(f"Error: {e}")
 
 # --- Chatbot Section ---
 st.markdown("---")
-st.subheader("💬 Ask the AI about exoplanets")
+st.subheader(" Ask the AI about exoplanets")
 
 # Initialize chat history
 if "chat_history" not in st.session_state:
@@ -81,9 +81,9 @@ if user_input:
             )
             reply = response["choices"][0]["message"]["content"]
         except Exception as e:
-            reply = f"⚠️ Error: {e}"
+            reply = f" Error: {e}"
     else:
-        reply = "⚠️ Please provide your OpenAI API key above."
+        reply = " Please provide your OpenAI API key above."
 
     st.session_state.chat_history.append({"role": "assistant", "content": reply})
 
