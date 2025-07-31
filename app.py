@@ -4,6 +4,27 @@ import joblib
 import pandas as pd
 import numpy as np
 import openai
+import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+def explain_planet_with_openai(planet_name, planet_info):
+    prompt = f"Explain the following exoplanet data to a high school student:\n\nPlanet Name: {planet_name}\nDetails: {planet_info}"
+    
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
+        explanation = response.choices[0].message.content
+    except Exception as e:
+        explanation = f"Error from OpenAI API: {str(e)}"
+
+    return explanation
+
 
 # --- SETUP ---
 st.set_page_config(page_title="Exoplanet AI Explorer", layout="wide")
