@@ -45,11 +45,13 @@ if tic_id and st.button("Analyze"):
             openai.api_key = openai_api_key
             prompt = f"Explain the following exoplanet signal to a student:\nDepth: {features[0]:.4f}\nDuration: {features[1]:.2f}\nSNR: {features[2]:.2f}"
             try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[{"role": "user", "content": prompt}]
-                )
-                explanation = response['choices'][0]['message']['content']
+                client = openai.OpenAI(api_key=openai_api_key)
+response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[{"role": "user", "content": prompt}]
+)
+explanation = response.choices[0].message.content
+
                 st.write(" Explanation:")
                 st.success(explanation)
             except Exception as e:
@@ -75,11 +77,13 @@ if user_input:
     if openai_api_key:
         openai.api_key = openai_api_key
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=st.session_state.chat_history
-            )
-            reply = response["choices"][0]["message"]["content"]
+            client = openai.OpenAI(api_key=openai_api_key)
+response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[{"role": "user", "content": prompt}]
+)
+explanation = response.choices[0].message.content
+
         except Exception as e:
             reply = f" Error: {e}"
     else:
